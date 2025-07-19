@@ -105,17 +105,6 @@ def withdraw():
 def leaderboard():
     top_users = User.query.order_by(User.wallet_balance.desc()).limit(10).all()
     return render_template('leaderboard.html', users=top_users)
-@app.route('/search')
-def search():
-    category = request.args.get('category')
-    location = request.args.get('location')
-    query = Shop.query
-    if category:
-        query = query.filter(Shop.category.ilike(f'%{category}%'))
-    if location:
-        query = query.filter(Shop.location.ilike(f'%{location}%'))
-    results = query.all()
-    return render_template('search.html', results=results)
 @app.route('/')
 def start():
     return render_template('start.html')
