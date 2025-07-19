@@ -1,0 +1,55 @@
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+  let tg = window.Telegram.WebApp;
+  tg.expand();
+
+  const user = tg.initDataUnsafe.user;
+  const telegram_id = user.id;
+  const username = user.username || user.first_name;
+
+  // Redirect to referral-enabled dashboard
+  window.location.href = `/register?telegram_id=${telegram_id}&username=${username}&ref=${tg.initDataUnsafe.start_param}`;
+</script>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Market Locator</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #007bff;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Market Locator 🛒</h1>
+    <p>Select an option below:</p>
+
+    <button onclick="location.href='/search'">🔍 Search Market Prices</button>
+    <button onclick="location.href='/refer'">🤝 Referral Program</button>
+    <button onclick="location.href='/register-shop'">🏪 Register Your Shop</button>
+</body>
+</html>

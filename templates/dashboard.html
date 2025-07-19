@@ -1,0 +1,14 @@
+<h2>Welcome {{ user.username }}</h2>
+<p>Wallet Balance: ₦{{ user.wallet_balance }}</p>
+<p>Your referral link: /register?ref={{ user.id }}</p>
+<a href="/leaderboard">Referral Leaderboard</a>
+<form action="/withdraw">
+  <input type="hidden" name="telegram_id" value="{{ user.telegram_id }}">
+  <input type="number" name="amount" placeholder="Amount">
+  <button type="submit">Withdraw</button>
+</form>
+<p>Referral Link:</p>
+<input value="https://t.me/YourBot?startapp={{ user.id }}" readonly>
+<a href="/search">🔍 Search Market</a><br>
+<a href="/withdraw?telegram_id={{ user.telegram_id }}&amount=100">💸 Withdraw ₦100</a><br>
+<a href="/leaderboard">🏆 Leaderboard</a>

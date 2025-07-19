@@ -1,0 +1,8 @@
+<h2>Search Results for "{{ query }}"</h2>
+<ul>
+  {% for item in results %}
+    <li>{{ item.name }} — ₦{{ item.price }} — {{ item.location }}</li>
+  {% else %}
+    <li>No results found</li>
+  {% endfor %}
+</ul>

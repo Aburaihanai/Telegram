@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Market Locator</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+        .shop {
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin: 10px 0;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Find Shops in Your Area</h2>
+    
+    <div class="shop">
+        <strong>Sabon Gari Zaria</strong><br>
+        - Market A <br>
+        - Market B
+    </div>
+
+    <div class="shop">
+        <strong>Sabon Gari Kaduna</strong><br>
+        - Market C <br>
+        - Market D
+    </div>
+
+    <div class="shop">
+        <strong>Local Community</strong><br>
+        - Local Shop 1 <br>
+        - Local Shop 2
+    </div>
+
+    <script>
+        // Optional: Telegram Web App interface integration
+        if (window.Telegram.WebApp) {
+            Telegram.WebApp.ready();
+            Telegram.WebApp.expand();
+        }
+    </script>
+</body>
+</html>

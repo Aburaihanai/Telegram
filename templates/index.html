@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Telegram Mini App</title>
+</head>
+<body>
+    <h2>Welcome to Market Locator Mini App</h2>
+    <a href="/webapp">Open Web App</a>
+<form action="/search" method="get">
+  <input type="text" name="query" placeholder="Search item..." required>
+  <button type="submit">Search</button>
+</form>
+</body>
+</html>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+  window.Telegram.WebApp.ready();
+
+  // Automatically send user data to backend
+  const tgUser = Telegram.WebApp.initDataUnsafe.user;
+
+  const queryParams = new URLSearchParams({
+    id: tgUser.id,
+    first_name: tgUser.first_name,
+    username: tgUser.username || '',
+    photo_url: tgUser.photo_url || '',
+    auth_date: Telegram.WebApp.initDataUnsafe.auth_date,
+    hash: Telegram.WebApp.initDataUnsafe.hash
+  });
+
+  window.location.href = "/?" + queryParams.toString();
+</script>

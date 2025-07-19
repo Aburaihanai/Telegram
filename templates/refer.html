@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Referral Dashboard</title>
+</head>
+<body>
+    <h2>Referral Dashboard</h2>
+    <p>Username: {{ user.username }}</p>
+    <p>Wallet Balance: ₦{{ user.wallet_balance }}</p>
+    <p>Your Referral Link:</p>
+    <input type="text" value="{{ referral_link }}" readonly style="width:100%; padding:10px;">
+
+    <p><a href="/">⬅ Back to Menu</a></p>
+</body>
+</html>

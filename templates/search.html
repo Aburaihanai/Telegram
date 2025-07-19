@@ -1,0 +1,30 @@
+<h2>Search Results</h2>
+<ul>
+  {% for shop in results %}
+    <li>{{ shop.name }} - ₦{{ shop.price }} - {{ shop.category }} ({{ shop.location }})</li>
+  {% endfor %}
+</ul>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Shops</title>
+</head>
+<body>
+    <h2>Search Market</h2>
+    <form method="get" action="/search">
+        <input type="text" name="category" placeholder="Category (e.g., food, electronics)" value="{{ category }}">
+        <input type="text" name="location" placeholder="Location (e.g., Zaria)" value="{{ location }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <ul>
+    {% for shop in results %}
+        <li><strong>{{ shop.name }}</strong> — ₦{{ shop.price }} | {{ shop.category }} | {{ shop.location }}</li>
+    {% else %}
+        <li>No shops found.</li>
+    {% endfor %}
+    </ul>
+
+    <p><a href="/">⬅ Back to Menu</a></p>
+</body>
+</html>

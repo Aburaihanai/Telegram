@@ -1,0 +1,6 @@
+<h3>Top Referrers</h3>
+<ul>
+  {% for user in users %}
+    <li>{{ user.username }} - ₦{{ user.wallet_balance }}</li>
+  {% endfor %}
+</ul>
