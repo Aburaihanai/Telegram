@@ -95,7 +95,7 @@ def withdraw():
     user = User.query.filter_by(telegram_id=telegram_id).first()
     if user and user.wallet_balance >= amount:
         user.wallet_balance -= amount
-        withdrawal = Withdrawal(user_id=user.id, amount=amount)
+        withdrawal = Withdrawal(user_id=user.id, amou . nt=amount)
         db.session.add(withdrawal)
         db.session.commit()
         return "Withdrawal successful"
@@ -148,12 +148,22 @@ def verify_telegram_auth(data):
     secret_key = hashlib.sha256(BOT_TOKEN.encode()).digest()
     hmac_string = hmac.new(secret_key, data_check_string.encode(), hashlib.sha256).hexdigest()
     return hmac_string == hash_
-
-@app.route("/")
+@app.route('/')
 def index():
-    user = request.args
-    if not verify_telegram_auth(user):
-        return "Authentication failed", 403
+    auth_data = dict(request.args)
 
-    session["telegram_user"] = user
-    return render_template("index.html", user=user)
+    if 'hash' not in auth_data:
+        return "❌ Please launch the app from Telegram", 400
+
+    try:
+        hash_ = auth_data.pop("hash")
+        # Optional: validate Telegram login with your secret token here
+        user_id = auth_data.get("id")
+        username = auth_data.get("username")
+        first_name = auth_data.get("first_name")
+        # store in session/db if needed
+
+        return render_template('index.html', username=username or first_name or "User")
+
+    except Exception as e:
+        return f"Internal Server Error: {e}", 500
