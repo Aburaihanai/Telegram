@@ -95,7 +95,7 @@ def withdraw():
     user = User.query.filter_by(telegram_id=telegram_id).first()
     if user and user.wallet_balance >= amount:
         user.wallet_balance -= amount
-        withdrawal = Withdrawal(user_id=user.id, amou . nt=amount)
+        withdrawal = Withdrawal(user_id=user.id, amount=amount)
         db.session.add(withdrawal)
         db.session.commit()
         return "Withdrawal successful"
