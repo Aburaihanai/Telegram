@@ -156,4 +156,4 @@ def index():
         return "Authentication failed", 403
 
     session["telegram_user"] = user
-    return render_template("index.html", user=user),\
+    return render_template("index.html", user=user)
