@@ -139,7 +139,7 @@ app = Flask(__name__)
 app.secret_key = "Saif@14051990"  # Replace with a secure key
 
 # Telegram bot token
-BOT_TOKEN = 8013830409:AAEHB4eF2UtNS-YCzw8EVGxt3GyJbGElNXY
+BOT_TOKEN = "8013830409:AAEHB4eF2UtNS-YCzw8EVGxt3GyJbGElNXY"
 
 def verify_telegram_auth(data):
     auth_data = dict(data)
