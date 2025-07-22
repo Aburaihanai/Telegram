@@ -1,14 +1,104 @@
-<h2>Welcome {{ user.username }}</h2>
-<p>Wallet Balance: ₦{{ user.wallet_balance }}</p>
-<p>Your referral link: /register?ref={{ user.id }}</p>
-<a href="/leaderboard">Referral Leaderboard</a>
-<form action="/withdraw">
-  <input type="hidden" name="telegram_id" value="{{ user.telegram_id }}">
-  <input type="number" name="amount" placeholder="Amount">
-  <button type="submit">Withdraw</button>
-</form>
-<p>Referral Link:</p>
-<input value="https://t.me/YourBot?startapp={{ user.id }}" readonly>
-<a href="/search">🔍 Search Market</a><br>
-<a href="/withdraw?telegram_id={{ user.telegram_id }}&amount=100">💸 Withdraw ₦100</a><br>
-<a href="/leaderboard">🏆 Leaderboard</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f7f9fc;
+      padding: 1.5rem;
+      color: #333;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #ffffff;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    h2 {
+      margin-bottom: 1rem;
+      color: #0b5394;
+    }
+    p {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+    .info-box {
+      background: #f1f8ff;
+      padding: 1rem;
+      border-left: 5px solid #0b5394;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 0.7rem;
+      background: #0b5394;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 0.8rem;
+      text-decoration: none;
+      color: #0b5394;
+      font-weight: bold;
+    }
+    .section-title {
+      font-size: 1.1rem;
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Welcome, {{ user.username }}</h2>
+
+    <div class="info-box">
+      <p><strong>Wallet Balance:</strong> ₦{{ user.wallet_balance }}</p>
+      <p><strong>Your Referral Link:</strong></p>
+      <input type="text" readonly value="https://t.me/YourBot?startapp={{ user.id }}">
+    </div>
+
+    <div>
+      <form action="/withdraw" method="get">
+        <input type="hidden" name="telegram_id" value="{{ user.telegram_id }}">
+        <label class="section-title">Withdraw Amount (₦)</label>
+        <input type="number" name="amount" placeholder="Enter amount (e.g. 100)">
+        <button type="submit">💸 Withdraw Now</button>
+      </form>
+    </div>
+
+    <a href="/leaderboard">🏆 View Referral Leaderboard</a>
+    <a href="/search">🔍 Search Market</a>
+    <a href="/withdraw?telegram_id={{ user.telegram_id }}&amount=100">💸 Quick Withdraw ₦100</a>
+    <a href="/">🏠 Back to Home</a>
+  </div>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    Telegram.WebApp.ready();
+  </script>
+</body>
+</html>

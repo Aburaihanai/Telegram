@@ -1,8 +1,87 @@
-<h2>Search Results for "{{ query }}"</h2>
-<ul>
-  {% for item in results %}
-    <li>{{ item.name }} — ₦{{ item.price }} — {{ item.location }}</li>
-  {% else %}
-    <li>No results found</li>
-  {% endfor %}
-</ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Results</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9f9f9;
+      padding: 1rem;
+      color: #333;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #ffffff;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    h2 {
+      text-align: center;
+      color: #0b5394;
+      margin-bottom: 1.5rem;
+    }
+
+    .item-card {
+      background: #eaf2ff;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      border-left: 4px solid #0b5394;
+    }
+
+    .item-card strong {
+      font-size: 1.1rem;
+      color: #0b5394;
+    }
+
+    .item-details {
+      font-size: 0.95rem;
+      margin-top: 0.2rem;
+    }
+
+    .no-result {
+      text-align: center;
+      color: #999;
+      font-style: italic;
+      padding-top: 1rem;
+    }
+
+    a {
+      display: block;
+      margin-top: 2rem;
+      text-align: center;
+      text-decoration: none;
+      color: #0b5394;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>🔎 Search Results for "{{ query }}"</h2>
+
+    {% if results %}
+      {% for item in results %}
+        <div class="item-card">
+          <strong>{{ item.name }}</strong>
+          <div class="item-details">₦{{ item.price }} — {{ item.location }}</div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="no-result">No results found.</p>
+    {% endif %}
+
+    <a href="/search">⬅ Back to Search</a>
+  </div>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>Telegram.WebApp.ready();</script>
+</body>
+</html>

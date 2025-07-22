@@ -1,15 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Referral Dashboard</title>
+  <meta charset="UTF-8">
+  <title>Referral Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg: var(--tg-theme-bg-color, #ffffff);
+      --text: var(--tg-theme-text-color, #000000);
+      --accent: #0088cc;
+      --card: #f9f9f9;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    .dashboard {
+      background-color: var(--card);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.05);
+    }
+
+    .dashboard p {
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #fff;
+    }
+
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 25px;
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .note {
+      font-size: 12px;
+      color: gray;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-    <h2>Referral Dashboard</h2>
-    <p>Username: {{ user.username }}</p>
-    <p>Wallet Balance: ₦{{ user.wallet_balance }}</p>
-    <p>Your Referral Link:</p>
-    <input type="text" value="{{ referral_link }}" readonly style="width:100%; padding:10px;">
+  <h2>Referral Dashboard</h2>
 
-    <p><a href="/">⬅ Back to Menu</a></p>
+  <div class="dashboard">
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Wallet Balance:</strong> ₦{{ user.wallet_balance }}</p>
+    <p><strong>Your Referral Link:</strong></p>
+    <input type="text" value="{{ referral_link }}" readonly onclick="this.select(); document.execCommand('copy'); alert('Referral link copied!');">
+  </div>
+
+  <a class="back" href="/">⬅ Back to Menu</a>
+  <p class="note">Share your referral link to earn ₦100 per referral!</p>
+
+  <script>
+    let tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+  </script>
 </body>
 </html>

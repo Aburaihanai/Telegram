@@ -1,47 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Market Locator</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            padding: 20px;
-        }
-        .shop {
-            padding: 10px;
-            border: 1px solid #ccc;
-            margin: 10px 0;
-            border-radius: 6px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Market Locator - Nearby Shops</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg-color: var(--tg-theme-bg-color, #ffffff);
+      --text-color: var(--tg-theme-text-color, #000000);
+      --accent: #007bff;
+      --card-bg: #f1f1f1;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    .shop-card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .shop-card h3 {
+      margin: 0 0 5px;
+      font-size: 18px;
+      color: var(--accent);
+    }
+
+    .shop-card p {
+      margin: 5px 0;
+    }
+
+    .shop-card a {
+      color: #007bff;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--card-bg);
+      border-top: 1px solid #ccc;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+    }
+
+    nav button {
+      background: none;
+      border: none;
+      font-size: 14px;
+      color: var(--accent);
+    }
+  </style>
 </head>
 <body>
-    <h2>Find Shops in Your Area</h2>
-    
-    <div class="shop">
-        <strong>Sabon Gari Zaria</strong><br>
-        - Market A <br>
-        - Market B
-    </div>
 
-    <div class="shop">
-        <strong>Sabon Gari Kaduna</strong><br>
-        - Market C <br>
-        - Market D
-    </div>
+  <h2>Nearby Shops</h2>
 
-    <div class="shop">
-        <strong>Local Community</strong><br>
-        - Local Shop 1 <br>
-        - Local Shop 2
+  <!-- Flask loop -->
+  {% for shop in shops %}
+    <div class="shop-card">
+      <h3>{{ shop.name }}</h3>
+      <p>📍 {{ shop.location }}</p>
+      <p>🛒 Category: {{ shop.category }}</p>
+      <p>💰 Price: ₦{{ shop.price }}</p>
+      <a href="https://maps.google.com/?q={{ shop.location | urlencode }}" target="_blank">🗺 View on Map</a>
     </div>
+  {% else %}
+    <p>No shops available in your area.</p>
+  {% endfor %}
 
-    <script>
-        // Optional: Telegram Web App interface integration
-        if (window.Telegram.WebApp) {
-            Telegram.WebApp.ready();
-            Telegram.WebApp.expand();
-        }
-    </script>
+  <nav>
+    <button onclick="location.href='/search'">🔍 Search</button>
+    <button onclick="location.href='/refer'">🤝 Referrals</button>
+    <button onclick="location.href='/register-shop'">🏪 Add Shop</button>
+    <button onclick="location.href='/'">🏠 Home</button>
+  </nav>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+  </script>
 </body>
 </html>

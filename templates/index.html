@@ -1,33 +1,152 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Telegram Mini App</title>
+  <meta charset="UTF-8">
+  <title>Market Locator - Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      color: #333;
+    }
+    nav {
+      background: #0b5394;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    nav h1 { font-size: 1.5rem; }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+    .hero {
+      padding: 3rem 2rem;
+      text-align: center;
+      background: #e0efff;
+    }
+    .hero h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .search-box {
+      margin: 2rem auto;
+      text-align: center;
+    }
+    input[type="text"] {
+      padding: 0.5rem;
+      width: 60%;
+      max-width: 300px;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      background: #0b5394;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .slider {
+      width: 90%;
+      max-width: 800px;
+      margin: 2rem auto;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .slides {
+      display: flex;
+      animation: slide 15s infinite;
+    }
+    .slides img, .slides video {
+      width: 100%;
+      flex-shrink: 0;
+    }
+    @keyframes slide {
+      0% { transform: translateX(0%); }
+      33% { transform: translateX(-100%); }
+      66% { transform: translateX(-200%); }
+      100% { transform: translateX(0%); }
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+      background: #222;
+      color: #fff;
+    }
+  </style>
 </head>
 <body>
+
+  <nav>
+    <h1>Market Locator</h1>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/add_shop">Add Shops</a></li>
+      <li><a href="/signup">Sign Up</a></li>
+      <li><a href="/contact">Contact Us</a></li>
+      <li><a href="/mission">Mission</a></li>
+      <li><a href="/vision">Vision</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
     <h2>Welcome to Market Locator Mini App</h2>
-    <a href="/webapp">Open Web App</a>
-<form action="/search" method="get">
-  <input type="text" name="query" placeholder="Search item..." required>
-  <button type="submit">Search</button>
-</form>
+    <p>Find goods & services fast across your local market!</p>
+    <a href="/webapp"><button>Open Web App</button></a>
+  </div>
+
+  <div class="search-box">
+    <form action="/search" method="get">
+      <input type="text" name="query" placeholder="Search item..." required>
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <div class="slider">
+    <div class="slides">
+      <img src="/static/shop1.jpg" alt="Ad 1">
+      <video autoplay loop muted>
+        <source src="/static/shop_ad.mp4" type="video/mp4">
+      </video>
+      <img src="/static/shop2.jpg" alt="Ad 2">
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Market Locator. All rights reserved.
+  </footer>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    window.Telegram.WebApp.ready();
+    const tgUser = Telegram.WebApp.initDataUnsafe.user;
+    const queryParams = new URLSearchParams({
+      id: tgUser.id,
+      first_name: tgUser.first_name,
+      username: tgUser.username || '',
+      photo_url: tgUser.photo_url || '',
+      auth_date: Telegram.WebApp.initDataUnsafe.auth_date,
+      hash: Telegram.WebApp.initDataUnsafe.hash
+    });
+    window.location.href = "/?" + queryParams.toString();
+  </script>
+
 </body>
 </html>
-
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script>
-  window.Telegram.WebApp.ready();
-
-  // Automatically send user data to backend
-  const tgUser = Telegram.WebApp.initDataUnsafe.user;
-
-  const queryParams = new URLSearchParams({
-    id: tgUser.id,
-    first_name: tgUser.first_name,
-    username: tgUser.username || '',
-    photo_url: tgUser.photo_url || '',
-    auth_date: Telegram.WebApp.initDataUnsafe.auth_date,
-    hash: Telegram.WebApp.initDataUnsafe.hash
-  });
-
-  window.location.href = "/?" + queryParams.toString();
-</script>

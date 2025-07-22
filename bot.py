@@ -6,14 +6,10 @@ WEBAPP_URL = "https://find-shops-naija.onrender.com"
 BOT_TOKEN = "8013830409:AAEHB4eF2UtNS-YCzw8EVGxt3GyJbGElNXY"
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
-        [KeyboardButton(
-            text="🛒 Open Market Locator",
-            web_app=WebAppInfo(url="https://your-app-url.vercel.app")  # Replace with your real Vercel/Render URL
-        )]
+        [InlineKeyboardButton("🛍️ Open Market Mini App", web_app=WebAppInfo(url=WEBAPP_URL))]
     ]
-    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
-
-    await update.message.reply_text("Welcome! Click the button below to open the Mini App:", reply_markup=reply_markup)
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text("👋 Welcome! Tap below to launch the Mini App:", reply_markup=reply_markup)
 
 def main():
     app = Application.builder().token(BOT_TOKEN).build()

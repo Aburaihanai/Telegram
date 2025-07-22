@@ -1,55 +1,84 @@
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script>
-  let tg = window.Telegram.WebApp;
-  tg.expand();
-
-  const user = tg.initDataUnsafe.user;
-  const telegram_id = user.id;
-  const username = user.username || user.first_name;
-
-  // Redirect to referral-enabled dashboard
-  window.location.href = `/register?telegram_id=${telegram_id}&username=${username}&ref=${tg.initDataUnsafe.start_param}`;
-</script>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Market Locator</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        body {
-            background-color: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-        }
+  <meta charset="UTF-8">
+  <title>Market Locator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --primary-color: #007bff;
+      --hover-color: #0056b3;
+      --bg-color: var(--tg-theme-bg-color, #ffffff);
+      --text-color: var(--tg-theme-text-color, #000000);
+    }
 
-        h1 {
-            color: #007bff;
-        }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      padding: 30px 20px;
+    }
 
-        button {
-            padding: 10px 20px;
-            margin: 10px;
-            border: none;
-            border-radius: 8px;
-            background-color: #007bff;
-            color: white;
-            font-size: 16px;
-        }
+    h1 {
+      color: var(--primary-color);
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
 
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    p {
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      max-width: 300px;
+      margin: 10px auto;
+      padding: 12px;
+      font-size: 16px;
+      background-color: var(--primary-color);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      transition: background 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: var(--hover-color);
+    }
+  </style>
 </head>
 <body>
-    <h1>Welcome to Market Locator 🛒</h1>
-    <p>Select an option below:</p>
 
-    <button onclick="location.href='/search'">🔍 Search Market Prices</button>
-    <button onclick="location.href='/refer'">🤝 Referral Program</button>
-    <button onclick="location.href='/register-shop'">🏪 Register Your Shop</button>
+  <h1>Welcome to Market Locator 🛒</h1>
+  <p>Select an option below:</p>
+
+  <button class="btn" onclick="goTo('/search')">🔍 Search Market Prices</button>
+  <button class="btn" onclick="goTo('/refer')">🤝 Referral Program</button>
+  <button class="btn" onclick="goTo('/register-shop')">🏪 Register Your Shop</button>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // Full height
+
+    const user = tg.initDataUnsafe.user;
+    const ref = tg.initDataUnsafe.start_param;
+    const telegram_id = user?.id;
+    const username = user?.username || user?.first_name || "User";
+
+    // Auto-redirect if first-time access with referral param
+    if (ref) {
+      window.location.href = `/register?telegram_id=${telegram_id}&username=${username}&ref=${ref}`;
+    }
+
+    function goTo(path) {
+      // Preserve Telegram ID on internal navigation if needed
+      window.location.href = `${path}?telegram_id=${telegram_id}&username=${username}`;
+    }
+  </script>
+
 </body>
 </html>
