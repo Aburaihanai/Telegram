@@ -9,8 +9,8 @@ import hmac
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///market_locator.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = "Saif@14051990"  # Replace in production
-BOT_TOKEN = "8013830409:AAEHB4eF2UtNS-YCzw8EVGxt3GyJbGElNXY"
+app.secret_key = "Saif@14051990"  # Change for production
+BOT_TOKEN = "8013830409:AAEHB4eF2UtNS-YCzw8EVGxt3GyJbGElNXY"  # Secure this
 
 db.init_app(app)
 
@@ -19,10 +19,12 @@ with app.app_context():
 
 # ---------------- AUTH HELPER -----------------
 def verify_telegram_auth(data):
-    auth_data = dict(data)
-    if "hash" not in auth_data:
-        return False
-    hash_ = auth_data.pop("hash")
+    try:
+        auth_data = dict(data)
+        hash_ = auth_data.pop("hash")
+    except KeyError:
+        return False  # No hash found
+
     data_check_string = "\n".join([f"{k}={v}" for k, v in sorted(auth_data.items())])
     secret_key = hashlib.sha256(BOT_TOKEN.encode()).digest()
     hmac_string = hmac.new(secret_key, data_check_string.encode(), hashlib.sha256).hexdigest()
@@ -32,8 +34,9 @@ def verify_telegram_auth(data):
 @app.route("/")
 def index():
     user = request.args.to_dict()
-    if not verify_telegram_auth(user):
-        return "Authentication failed", 403
+
+    if not user or not verify_telegram_auth(user):
+        return "<h3>Authentication failed. Please open this app via Telegram Mini App button.</h3>", 403
 
     session["telegram_user"] = user
     return render_template("index.html", user=user)
