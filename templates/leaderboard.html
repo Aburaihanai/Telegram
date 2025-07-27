@@ -3,86 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <title>Referral Leaderboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f7fb;
-      padding: 1rem;
-      color: #333;
-    }
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: #fff;
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 5px 10px rgba(0,0,0,0.05);
-    }
-    h3 {
-      text-align: center;
-      color: #0b5394;
-      margin-bottom: 1.5rem;
-    }
-    ol {
-      list-style: none;
+      font-family: Arial, sans-serif;
+      background: #f5f6fa;
+      margin: 0;
       padding: 0;
     }
-    li {
-      background: #e6f0ff;
-      padding: 1rem;
-      margin-bottom: 0.8rem;
-      border-radius: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    .gold { background: #fff8dc; }
-    .silver { background: #f0f0f0; }
-    .bronze { background: #ffe4c4; }
-    .rank {
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 25px;
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+    }
+    th {
+      background-color: #3498db;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #3498db;
       font-weight: bold;
-      font-size: 1.1rem;
-      margin-right: 1rem;
-      color: #0b5394;
     }
-    .user-info {
-      flex: 1;
-    }
-    .username {
-      font-size: 1rem;
-      font-weight: 600;
-    }
-    .amount {
-      color: green;
-      font-weight: bold;
+    @media (max-width: 600px) {
+      table, th, td {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
 <body>
-
   <div class="container">
-    <h3>🏆 Top Referrers</h3>
+    <h2>🏆 Referral Leaderboard</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Username</th>
+          <th>Referrals</th>
+          <th>Wallet (₦)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in leaderboard %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ user.username or user.email or "User" }}</td>
+          <td>{{ user.referrals_count }}</td>
+          <td>{{ '%.2f'|format(user.wallet_balance) }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="4">No users yet</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 
-    <ol>
-      {% for user in users %}
-        <li class="{% if loop.index == 1 %}gold{% elif loop.index == 2 %}silver{% elif loop.index == 3 %}bronze{% endif %}">
-          <span class="rank">#{{ loop.index }}</span>
-          <div class="user-info">
-            <div class="username">{{ user.username }}</div>
-            <div class="amount">₦{{ user.wallet_balance }}</div>
-          </div>
-        </li>
-      {% endfor %}
-    </ol>
-
-    <a href="/" style="display: block; margin-top: 1.5rem; text-align: center; color: #0b5394; font-weight: bold;">🏠 Back to Home</a>
+    <a href="/" class="back-link">← Back to Home</a>
   </div>
-
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script>
-    Telegram.WebApp.ready();
-  </script>
 </body>
 </html>

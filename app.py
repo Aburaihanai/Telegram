@@ -1,88 +1,108 @@
-from flask import Flask, request, render_template, redirect, url_for, session
+from flask import Flask, request, render_template, redirect, url_for, session, flash
 from models import db, User, Withdrawal, Shop
 from sqlalchemy import func
-import random
-import string
-import hashlib
-import hmac
+from werkzeug.security import generate_password_hash, check_password_hash
+import uuid
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///market_locator.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = "Saif@14051990"  # Change for production
-BOT_TOKEN = "8013830409:AAEHB4eF2UtNS-YCzw8EVGxt3GyJbGElNXY"  # Secure this
+app.secret_key = "Saif@14051990"  # Replace in production
 
 db.init_app(app)
 
 with app.app_context():
     db.create_all()
 
-# ---------------- AUTH HELPER -----------------
-def verify_telegram_auth(data):
-    try:
-        auth_data = dict(data)
-        hash_ = auth_data.pop("hash")
-    except KeyError:
-        return False  # No hash found
+# ---------------------- ROUTES ---------------------- #
 
-    data_check_string = "\n".join([f"{k}={v}" for k, v in sorted(auth_data.items())])
-    secret_key = hashlib.sha256(BOT_TOKEN.encode()).digest()
-    hmac_string = hmac.new(secret_key, data_check_string.encode(), hashlib.sha256).hexdigest()
-    return hmac_string == hash_
-
-# ---------------- ROUTES -----------------
 @app.route("/")
-def index():
-    user = request.args.to_dict()
+def home():
+    return render_template("index.html")
 
-    if not user or not verify_telegram_auth(user):
-        return "<h3>Authentication failed. Please open this app via Telegram Mini App button.</h3>", 403
-
-    session["telegram_user"] = user
-    return render_template("index.html", user=user)
-
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    telegram_id = request.args.get('telegram_id')
-    username = request.args.get('username')
-    ref = request.args.get('ref')
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+        username = request.form["username"]
+        ref = request.form.get("ref")
 
-    user = User.query.filter_by(telegram_id=telegram_id).first()
-    if not user:
-        referred_by = User.query.get(ref) if ref else None
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            flash("Email already registered")
+            return redirect(url_for("register"))
+
+        referred_by = User.query.filter_by(referral_code=ref).first() if ref else None
+
         new_user = User(
-            telegram_id=telegram_id,
+            id=str(uuid.uuid4()),
+            email=email,
             username=username,
+            password_hash=generate_password_hash(password),
             referred_by=referred_by.id if referred_by else None,
-            wallet_balance=100.0 if referred_by else 0.0
+            wallet_balance=100.0 if referred_by else 0.0,
         )
+
         db.session.add(new_user)
         if referred_by:
             referred_by.wallet_balance += 100
         db.session.commit()
 
-    return redirect(url_for('dashboard', telegram_id=telegram_id))
+        session["user_id"] = new_user.id
+        return redirect(url_for("dashboard"))
+
+    return render_template("register.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+
+        user = User.query.filter_by(email=email).first()
+        if user and check_password_hash(user.password_hash, password):
+            session["user_id"] = user.id
+            return redirect(url_for("dashboard"))
+        flash("Invalid email or password")
+    return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("home"))
 
 @app.route("/dashboard")
 def dashboard():
-    telegram_id = request.args.get('telegram_id')
-    user = User.query.filter_by(telegram_id=telegram_id).first()
+    user = get_current_user()
     if not user:
-        return redirect(url_for('index'))
+        return redirect(url_for("login"))
     return render_template("dashboard.html", user=user)
 
-@app.route("/withdraw")
+@app.route("/wallet")
+def wallet():
+    user = get_current_user()
+    if not user:
+        return redirect(url_for("login"))
+    return render_template("wallet.html", user=user)
+
+@app.route("/withdraw", methods=["GET", "POST"])
 def withdraw():
-    telegram_id = request.args.get('telegram_id')
-    amount = float(request.args.get('amount', 0))
-    user = User.query.filter_by(telegram_id=telegram_id).first()
-    if user and user.wallet_balance >= amount:
-        user.wallet_balance -= amount
-        withdrawal = Withdrawal(user_id=user.id, amount=amount)
-        db.session.add(withdrawal)
-        db.session.commit()
-        return "Withdrawal successful"
-    return "Insufficient balance"
+    user = get_current_user()
+    if not user:
+        return redirect(url_for("login"))
+
+    if request.method == "POST":
+        amount = float(request.form.get("amount", 0))
+        if user.wallet_balance >= amount:
+            user.wallet_balance -= amount
+            withdrawal = Withdrawal(user_id=user.id, amount=amount)
+            db.session.add(withdrawal)
+            db.session.commit()
+            flash("Withdrawal successful")
+        else:
+            flash("Insufficient balance")
+    return render_template("withdraw.html", user=user)
 
 @app.route("/leaderboard")
 def leaderboard():
@@ -91,14 +111,12 @@ def leaderboard():
 
 @app.route("/refer")
 def refer():
-    telegram_id = request.args.get('telegram_id')
-    user = User.query.filter_by(telegram_id=telegram_id).first()
+    user = get_current_user()
     if not user:
-        return "User not found."
-    referral_link = f"https://t.me/FindShopsNaijaNaijaBot?startapp={user.id}"
-    return render_template("refer.html", user=user, referral_link=referral_link)
+        return redirect(url_for("login"))
+    return render_template("refer.html", user=user)
 
-@app.route("/search", methods=["GET"])
+@app.route("/search")
 def search():
     category = request.args.get("category", "")
     location = request.args.get("location", "")
@@ -112,9 +130,37 @@ def search():
     results = query.all()
     return render_template("search.html", results=results, category=category, location=location)
 
-# ---------------- REFERRAL GENERATOR -----------------
-def generate_referral_code():
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=6))
+@app.route("/shop/new", methods=["GET", "POST"])
+def create_shop():
+    user = get_current_user()
+    if not user:
+        return redirect(url_for("login"))
+
+    if request.method == "POST":
+        name = request.form["name"]
+        category = request.form["category"]
+        location = request.form["location"]
+        price = float(request.form["price"])
+
+        shop = Shop(name=name, category=category, location=location, price=price)
+        db.session.add(shop)
+        db.session.commit()
+        flash("Shop added successfully")
+        return redirect(url_for("adverts"))
+    
+    return render_template("shop_form.html")
+
+@app.route("/adverts")
+def adverts():
+    all_shops = Shop.query.order_by(Shop.created_at.desc()).all()
+    return render_template("adverts.html", shops=all_shops)
+
+# ------------------ Helper ------------------ #
+def get_current_user():
+    user_id = session.get("user_id")
+    if user_id:
+        return User.query.get(user_id)
+    return None
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(debug=True)

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Withdraw Earnings - Market Locator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #dc3545;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .balance {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input[type="number"] {
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            background-color: #dc3545;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #c82333;
+        }
+
+        .note {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #777;
+            text-align: center;
+        }
+
+        .message {
+            margin-top: 15px;
+            color: green;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .error {
+            margin-top: 15px;
+            color: red;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">Withdraw Funds</div>
+
+    <div class="container">
+        <div class="balance">
+            Wallet Balance: ₦{{ user.wallet_balance }}
+        </div>
+
+        {% if message %}
+            <div class="message">{{ message }}</div>
+        {% endif %}
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <input type="number" name="amount" step="0.01" placeholder="Enter amount to withdraw" required>
+            <button type="submit">Request Withdrawal</button>
+        </form>
+
+        <div class="note">
+            Minimum withdrawal: ₦100<br>
+            Withdrawals are processed within 24-48 hours.
+        </div>
+    </div>
+
+</body>
+</html>

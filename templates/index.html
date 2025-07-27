@@ -1,152 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Market Locator - Home</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f4f4;
-      color: #333;
-    }
-    nav {
-      background: #0b5394;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: white;
-      position: sticky;
-      top: 0;
-      z-index: 999;
-    }
-    nav h1 { font-size: 1.5rem; }
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 1.5rem;
-    }
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    nav ul li a:hover {
-      text-decoration: underline;
-    }
-    .hero {
-      padding: 3rem 2rem;
-      text-align: center;
-      background: #e0efff;
-    }
-    .hero h2 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-    .search-box {
-      margin: 2rem auto;
-      text-align: center;
-    }
-    input[type="text"] {
-      padding: 0.5rem;
-      width: 60%;
-      max-width: 300px;
-    }
-    button {
-      padding: 0.5rem 1rem;
-      background: #0b5394;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    .slider {
-      width: 90%;
-      max-width: 800px;
-      margin: 2rem auto;
-      overflow: hidden;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    .slides {
-      display: flex;
-      animation: slide 15s infinite;
-    }
-    .slides img, .slides video {
-      width: 100%;
-      flex-shrink: 0;
-    }
-    @keyframes slide {
-      0% { transform: translateX(0%); }
-      33% { transform: translateX(-100%); }
-      66% { transform: translateX(-200%); }
-      100% { transform: translateX(0%); }
-    }
-    footer {
-      text-align: center;
-      padding: 2rem;
-      font-size: 0.9rem;
-      background: #222;
-      color: #fff;
-    }
-  </style>
+    <title>Welcome to Market Locator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f9;
+        }
+
+        .header {
+            background-color: #007bff;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            border-bottom: 4px solid #0056b3;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .btn-grid {
+            display: grid;
+            gap: 15px;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 500px) {
+            .btn-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .btn {
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
 
-  <nav>
-    <h1>Market Locator</h1>
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/add_shop">Add Shops</a></li>
-      <li><a href="/signup">Sign Up</a></li>
-      <li><a href="/contact">Contact Us</a></li>
-      <li><a href="/mission">Mission</a></li>
-      <li><a href="/vision">Vision</a></li>
-    </ul>
-  </nav>
-
-  <div class="hero">
-    <h2>Welcome to Market Locator Mini App</h2>
-    <p>Find goods & services fast across your local market!</p>
-    <a href="/webapp"><button>Open Web App</button></a>
-  </div>
-
-  <div class="search-box">
-    <form action="/search" method="get">
-      <input type="text" name="query" placeholder="Search item..." required>
-      <button type="submit">Search</button>
-    </form>
-  </div>
-
-  <div class="slider">
-    <div class="slides">
-      <img src="/static/shop1.jpg" alt="Ad 1">
-      <video autoplay loop muted>
-        <source src="/static/shop_ad.mp4" type="video/mp4">
-      </video>
-      <img src="/static/shop2.jpg" alt="Ad 2">
+    <div class="header">
+        <h1>Market Locator</h1>
+        <p>Welcome to the platform</p>
     </div>
-  </div>
 
-  <footer>
-    &copy; 2025 Market Locator. All rights reserved.
-  </footer>
+    <div class="container">
+        <h2>Main Menu</h2>
+        <div class="btn-grid">
+            <a href="/refer" class="btn">Referral Dashboard</a>
+            <a href="/wallet" class="btn">Wallet Balance</a>
+            <a href="/withdraw" class="btn">Request Withdrawal</a>
+            <a href="/search" class="btn">Search Shops</a>
+            <a href="/register-shop" class="btn">Register Your Shop</a>
+            <a href="/logout" class="btn" style="background-color:#dc3545;">Logout</a>
+        </div>
+    </div>
 
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script>
-    window.Telegram.WebApp.ready();
-    const tgUser = Telegram.WebApp.initDataUnsafe.user;
-    const queryParams = new URLSearchParams({
-      id: tgUser.id,
-      first_name: tgUser.first_name,
-      username: tgUser.username || '',
-      photo_url: tgUser.photo_url || '',
-      auth_date: Telegram.WebApp.initDataUnsafe.auth_date,
-      hash: Telegram.WebApp.initDataUnsafe.hash
-    });
-    window.location.href = "/?" + queryParams.toString();
-  </script>
+    <div class="footer">
+        &copy; 2025 Market Locator. Built with ❤️ in Nigeria.
+    </div>
 
 </body>
 </html>

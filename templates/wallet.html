@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Wallet - Market Locator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #0056b3;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .balance-box {
+            background-color: #e0f7fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .balance-box h3 {
+            margin: 0;
+            color: #007bff;
+            font-size: 22px;
+        }
+
+        .balance {
+            font-size: 36px;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px;
+            text-align: center;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .history {
+            margin-top: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>My Wallet</h1>
+    </div>
+
+    <div class="container">
+        <div class="balance-box">
+            <h3>Current Balance</h3>
+            <div class="balance">₦{{ user.wallet_balance }}</div>
+        </div>
+
+        <a class="btn" href="/withdraw">Withdraw Funds</a>
+
+        {% if user.withdrawals %}
+        <div class="history">
+            <h3>Withdrawal History</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Amount (₦)</th>
+                        <th>Requested On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for w in user.withdrawals %}
+                    <tr>
+                        <td>{{ w.amount }}</td>
+                        <td>{{ w.requested_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p style="text-align:center;">No withdrawals yet.</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

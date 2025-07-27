@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Advertisements</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f7f9;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #2c3e50;
+    }
+
+    .ad-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .ad-card {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .ad-card img,
+    .ad-card video {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .ad-details {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .ad-details strong {
+      color: #333;
+    }
+
+    .back {
+      margin-top: 25px;
+      text-align: center;
+    }
+
+    .back a {
+      color: #2980b9;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .back a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📢 Current Advertisements</h2>
+
+    {% if adverts and adverts|length > 0 %}
+      <div class="ad-grid">
+        {% for ad in adverts %}
+          <div class="ad-card">
+            {% if ad.media_type == 'image' %}
+              <img src="{{ url_for('static', filename='ads/' + ad.media_filename) }}" alt="Ad Image">
+            {% elif ad.media_type == 'video' %}
+              <video controls>
+                <source src="{{ url_for('static', filename='ads/' + ad.media_filename) }}" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            {% endif %}
+            <div class="ad-details">
+              <p><strong>Shop:</strong> {{ ad.shop_name }}</p>
+              <p><strong>Location:</strong> {{ ad.location }}</p>
+              <p><strong>Expires:</strong> {{ ad.expiry_date.strftime('%d %b %Y') }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p style="text-align: center; color: #888;">No active adverts at the moment.</p>
+    {% endif %}
+
+    <div class="back">
+      <a href="{{ url_for('dashboard') }}">← Back to Dashboard</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,86 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Referral Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    :root {
-      --bg: var(--tg-theme-bg-color, #ffffff);
-      --text: var(--tg-theme-text-color, #000000);
-      --accent: #0088cc;
-      --card: #f9f9f9;
-    }
+    <title>Referral Dashboard - Market Locator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
 
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-    }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #0056b3;
+        }
 
-    h2 {
-      text-align: center;
-      color: var(--accent);
-      margin-bottom: 20px;
-    }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
 
-    .dashboard {
-      background-color: var(--card);
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.05);
-    }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    .dashboard p {
-      margin: 10px 0;
-      font-size: 16px;
-    }
+        .info {
+            margin: 20px 0;
+            background-color: #e9f5ff;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
 
-    input[type="text"] {
-      width: 100%;
-      padding: 12px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      background-color: #fff;
-    }
+        .ref-link {
+            font-weight: bold;
+            word-wrap: break-word;
+            color: #007bff;
+        }
 
-    .back {
-      display: block;
-      text-align: center;
-      margin-top: 25px;
-      text-decoration: none;
-      color: var(--accent);
-      font-weight: bold;
-    }
+        .ref-count {
+            font-weight: bold;
+            color: #28a745;
+        }
 
-    .note {
-      font-size: 12px;
-      color: gray;
-      text-align: center;
-    }
-  </style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+    </style>
 </head>
 <body>
-  <h2>Referral Dashboard</h2>
 
-  <div class="dashboard">
-    <p><strong>Username:</strong> {{ user.username }}</p>
-    <p><strong>Wallet Balance:</strong> ₦{{ user.wallet_balance }}</p>
-    <p><strong>Your Referral Link:</strong></p>
-    <input type="text" value="{{ referral_link }}" readonly onclick="this.select(); document.execCommand('copy'); alert('Referral link copied!');">
-  </div>
+    <div class="header">
+        <h1>Referral Dashboard</h1>
+    </div>
 
-  <a class="back" href="/">⬅ Back to Menu</a>
-  <p class="note">Share your referral link to earn ₦100 per referral!</p>
+    <div class="container">
+        <div class="info">
+            <p>Your Referral Code: <span class="ref-link">{{ user.referral_code }}</span></p>
+            <p>Referral Link: <span class="ref-link">{{ request.host_url }}register?ref={{ user.referral_code }}</span></p>
+            <p>You have referred <span class="ref-count">{{ referrals|length }}</span> user(s).</p>
+        </div>
 
-  <script>
-    let tg = window.Telegram.WebApp;
-    tg.ready();
-    tg.expand();
-  </script>
+        <h2>Referred Users</h2>
+        {% if referrals %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Telegram ID</th>
+                    <th>Date Joined</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in referrals %}
+                <tr>
+                    <td>{{ r.username or 'No Username' }}</td>
+                    <td>{{ r.telegram_id }}</td>
+                    <td>{{ r.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No referrals yet.</p>
+        {% endif %}
+
+        <a class="btn" href="/">Back to Home</a>
+    </div>
+
 </body>
 </html>

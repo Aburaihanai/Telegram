@@ -1,4 +1,3 @@
-# models.py
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 import uuid
@@ -12,10 +11,12 @@ class User(db.Model):
     __tablename__ = 'user'
 
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    telegram_id = db.Column(db.String(50), unique=True, nullable=False)
-    username = db.Column(db.String(50))
-    referral_code = db.Column(db.String(50), unique=True, nullable=False, default=lambda: str(uuid.uuid4())[:8])
     
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    username = db.Column(db.String(50), nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+
+    referral_code = db.Column(db.String(50), unique=True, nullable=False, default=lambda: str(uuid.uuid4())[:8])
     referred_by = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=True)
     referrals = db.relationship('User', backref=db.backref('referrer', remote_side=[id]), lazy='dynamic')
 
@@ -23,7 +24,7 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     def __repr__(self):
-        return f"<User {self.username or self.telegram_id}>"
+        return f"<User {self.username} - {self.email}>"
 
 # ========================
 # WITHDRAWAL MODEL

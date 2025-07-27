@@ -1,122 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Search Market</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f6f8;
-      padding: 1rem;
-      color: #333;
-    }
+    <title>Search Shops - Market Locator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f2f4f8;
+            margin: 0;
+            padding: 0;
+        }
 
-    .container {
-      max-width: 700px;
-      margin: auto;
-      background: #fff;
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
+        .header {
+            background-color: #28a745;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
 
-    h2 {
-      text-align: center;
-      color: #0b5394;
-      margin-bottom: 1.5rem;
-    }
+        .container {
+            max-width: 700px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
 
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
 
-    input[type="text"] {
-      padding: 0.7rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-      width: 100%;
-    }
+        input[type="text"],
+        select {
+            flex: 1 1 45%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
 
-    button {
-      padding: 0.8rem;
-      background: #0b5394;
-      color: white;
-      font-size: 1rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+        button {
+            flex: 1 1 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
 
-    button:hover {
-      background: #083866;
-    }
+        button:hover {
+            background-color: #218838;
+        }
 
-    .shop-card {
-      background: #e6f0ff;
-      padding: 1rem;
-      border-radius: 10px;
-      margin-bottom: 1rem;
-      display: flex;
-      flex-direction: column;
-    }
+        h3 {
+            margin-top: 20px;
+            color: #333;
+        }
 
-    .shop-card strong {
-      font-size: 1.2rem;
-      color: #0b5394;
-    }
+        .shop-card {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+        }
 
-    .shop-details {
-      margin-top: 0.3rem;
-      font-size: 0.95rem;
-    }
+        .shop-card strong {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
 
-    .no-result {
-      text-align: center;
-      color: #999;
-      font-style: italic;
-    }
-
-    a {
-      display: block;
-      margin-top: 2rem;
-      text-align: center;
-      color: #0b5394;
-      font-weight: bold;
-      text-decoration: none;
-    }
-  </style>
+        .shop-card span {
+            display: block;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="container">
-    <h2>🔍 Search Market</h2>
+    <div class="header">
+        Search Shops & Prices
+    </div>
 
-    <form method="get" action="/search">
-      <input type="text" name="category" placeholder="Category (e.g., food, electronics)" value="{{ category }}">
-      <input type="text" name="location" placeholder="Location (e.g., Zaria)" value="{{ location }}">
-      <button type="submit">Search</button>
-    </form>
+    <div class="container">
+        <form method="POST">
+            <input type="text" name="name" placeholder="Item name" required>
+            <select name="location">
+                <option value="">Select Location</option>
+                <option value="Sabon Gari">Sabon Gari</option>
+                <option value="Zaria City">Zaria City</option>
+                <option value="Samaru">Samaru</option>
+                <!-- Add more locations as needed -->
+            </select>
+            <button type="submit">Search</button>
+        </form>
 
-    {% if results %}
-      {% for shop in results %}
-        <div class="shop-card">
-          <strong>{{ shop.name }}</strong>
-          <div class="shop-details">₦{{ shop.price }} | {{ shop.category }} | {{ shop.location }}</div>
-        </div>
-      {% endfor %}
-    {% else %}
-      <p class="no-result">No shops found for your search.</p>
-    {% endif %}
+        {% if results %}
+            <h3>Search Results:</h3>
+            {% for shop in results %}
+                <div class="shop-card">
+                    <strong>{{ shop.name }}</strong>
+                    <span>Category: {{ shop.category or 'N/A' }}</span>
+                    <span>Location: {{ shop.location }}</span>
+                    <span>Price: ₦{{ shop.price }}</span>
+                </div>
+            {% endfor %}
+        {% elif searched %}
+            <p>No results found for your search.</p>
+        {% endif %}
+    </div>
 
-    <a href="/">⬅ Back to Menu</a>
-  </div>
-
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script>Telegram.WebApp.ready();</script>
 </body>
 </html>
