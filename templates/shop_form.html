@@ -1,139 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Register Shop</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f6f8fa;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
-      background-color: #ffffff;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-
-    h2 {
-      text-align: center;
-      color: #34495e;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    label {
-      font-weight: bold;
-      color: #2c3e50;
-    }
-
-    input[type="text"],
-    input[type="number"] {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    button {
-      background-color: #27ae60;
-      color: white;
-      padding: 12px;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    button:hover {
-      background-color: #219150;
-    }
-
-    .back {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .back a {
-      color: #3498db;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .back a:hover {
-      text-decoration: underline;
-    }
-
-    .flash {
-      padding: 12px;
-      background-color: #dff9fb;
-      border-left: 4px solid #00cec9;
-      margin-bottom: 20px;
-      border-radius: 5px;
-      color: #2d3436;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        margin: 20px;
-        padding: 20px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Register Shop</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            background: #f4f4f4;
+        }
+        form {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 1rem;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.2rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .subcategory-price {
+            margin-top: 1rem;
+        }
+        .service-checkbox {
+            margin-right: 1rem;
+        }
+        .admin-section {
+            background-color: #f0f8ff;
+            padding: 1rem;
+            margin-top: 2rem;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+        }
+        button {
+            margin-top: 1.5rem;
+            padding: 0.7rem 1.5rem;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h2>🛒 Register Your Shop</h2>
 
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div class="flash">
-          {% for message in messages %}
-            {{ message }}
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
+<h2>Register Shop</h2>
 
-    <form method="POST" action="{{ url_for('register_shop') }}">
-      <div>
-        <label for="name">Shop Name</label>
-        <input type="text" name="name" id="name" required>
-      </div>
+<form action="{{ url_for('register_shop') }}" method="POST">
+    <label for="name">Shop Name:</label>
+    <input type="text" name="name" required>
 
-      <div>
-        <label for="category">Category (e.g., Electronics, Groceries)</label>
-        <input type="text" name="category" id="category">
-      </div>
+    <label for="category">Category:</label>
+    <select name="category" id="category" required onchange="updateSubcategories()">
+        <option value="">-- Select Category --</option>
+        <option value="Clothing">Clothing</option>
+        <option value="Groceries">Groceries</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Furniture">Furniture</option>
+        <option value="Specialty Stores">Specialty Stores</option>
+        <option value="Pharmacies">Pharmacies</option>
+        <option value="Department Stores">Department Stores</option>
+        <option value="Supermarkets">Supermarkets</option>
+        <option value="Convenience Stores">Convenience Stores</option>
+        <option value="Discount Stores">Discount Stores</option>
+        <option value="Category Killers">Category Killers</option>
+        <option value="Factory Outlets">Factory Outlets</option>
+        <option value="Online Retailers">Online Retailers</option>
+        <option value="Non-store Retailers">Non-store Retailers</option>
+    </select>
 
-      <div>
-        <label for="price">Typical Price (₦)</label>
-        <input type="number" name="price" id="price" step="0.01" required>
-      </div>
+    <div id="subcategoryContainer" class="subcategory-price"></div>
 
-      <div>
-        <label for="location">Shop Location</label>
-        <input type="text" name="location" id="location" required>
-      </div>
-
-      <button type="submit">📤 Submit Shop</button>
-    </form>
-
-    <div class="back">
-      <a href="{{ url_for('dashboard') }}">← Back to Dashboard</a>
+    <label>Services Offered:</label>
+    <div>
+        <label class="service-checkbox"><input type="checkbox" name="services" value="POS"> POS Transactions</label>
+        <label class="service-checkbox"><input type="checkbox" name="services" value="Delivery"> Home Delivery</label>
+        <label class="service-checkbox"><input type="checkbox" name="services" value="Repairs"> Repairs</label>
+        <label class="service-checkbox"><input type="checkbox" name="services" value="Consultation"> Consultations</label>
+        <label class="service-checkbox"><input type="checkbox" name="services" value="Gift Wrapping"> Gift Wrapping</label>
+        <label class="service-checkbox"><input type="checkbox" name="services" value="Loyalty"> Loyalty Programs</label>
+        <label class="service-checkbox"><input type="checkbox" name="services" value="Financing"> Financing</label>
+        <label class="service-checkbox"><input type="checkbox" name="services" value="Installation"> Installation</label>
     </div>
-  </div>
+
+    <label for="address">Shop Address:</label>
+    <textarea name="address" rows="2" required></textarea>
+
+    <label for="location">Shop Location (e.g., Sabon Gari Zaria):</label>
+    <input type="text" name="location" required>
+
+    <label for="phone">Contact Phone:</label>
+    <input type="tel" name="phone" required>
+
+    <!-- ADMIN MANUAL ENTRY SECTION -->
+    <div class="admin-section">
+        <h4>For Admins: Manual Shop Registration</h4>
+        <p>If the shop does not fall under the listed categories, enter full description below:</p>
+        <label for="custom_info">Full Shop Info:</label>
+        <textarea name="custom_info" rows="4" placeholder="Include name, items sold, prices, services, location, and contact..."></textarea>
+    </div>
+
+    <button type="submit">Register Shop</button>
+</form>
+
+<!-- JavaScript for dynamic subcategory & price fields -->
+<script>
+    const subcategories = {
+        "Clothing": ["T-Shirts", "Dresses", "Suits", "Shoes"],
+        "Groceries": ["Rice", "Beans", "Snacks", "Vegetables"],
+        "Electronics": ["TV", "Smartphone", "Laptop", "Accessories"],
+        "Furniture": ["Sofa", "Bed", "Table", "Cabinet"],
+        "Pharmacies": ["Drugs", "Vitamins", "Personal Care"],
+        "Specialty Stores": ["Books", "Toys", "Pet Supplies"],
+        "Supermarkets": ["All-in-one", "Frozen Items", "Bakery"],
+        // Add more as needed...
+    };
+
+    function updateSubcategories() {
+        const cat = document.getElementById("category").value;
+        const container = document.getElementById("subcategoryContainer");
+        container.innerHTML = "";
+
+        if (subcategories[cat]) {
+            subcategories[cat].forEach(item => {
+                container.innerHTML += `
+                    <label>${item} Price:</label>
+                    <input type="text" name="prices[${item}]" placeholder="₦ price for ${item}">
+                `;
+            });
+        }
+    }
+</script>
+
 </body>
 </html>
