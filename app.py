@@ -7,10 +7,11 @@ import uuid
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///market_locator.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = "Saif@14051990"  # Replace in production
+app.secret_key = "Saif@14051990"  # Change this in production!
 
 db.init_app(app)
 
+# Create all tables
 with app.app_context():
     db.create_all()
 
@@ -45,11 +46,13 @@ def register():
         )
 
         db.session.add(new_user)
-        if referred_by:
-            referred_by.wallet_balance += 100
-        db.session.commit()
 
+        if referred_by:
+            referred_by.wallet_balance += 100  # Reward for referral
+
+        db.session.commit()
         session["user_id"] = new_user.id
+
         return redirect(url_for("dashboard"))
 
     return render_template("register.html")
@@ -64,6 +67,7 @@ def login():
         if user and check_password_hash(user.password_hash, password):
             session["user_id"] = user.id
             return redirect(url_for("dashboard"))
+
         flash("Invalid email or password")
     return render_template("login.html")
 
@@ -77,6 +81,10 @@ def dashboard():
     user = get_current_user()
     if not user:
         return redirect(url_for("login"))
+
+    # Fix: Convert AppenderQuery to list so Jinja |length works
+    user.referrals = user.referrals.all()
+
     return render_template("dashboard.html", user=user)
 
 @app.route("/wallet")
@@ -93,15 +101,19 @@ def withdraw():
         return redirect(url_for("login"))
 
     if request.method == "POST":
-        amount = float(request.form.get("amount", 0))
-        if user.wallet_balance >= amount:
-            user.wallet_balance -= amount
-            withdrawal = Withdrawal(user_id=user.id, amount=amount)
-            db.session.add(withdrawal)
-            db.session.commit()
-            flash("Withdrawal successful")
-        else:
-            flash("Insufficient balance")
+        try:
+            amount = float(request.form.get("amount", 0))
+            if user.wallet_balance >= amount and amount > 0:
+                user.wallet_balance -= amount
+                withdrawal = Withdrawal(user_id=user.id, amount=amount)
+                db.session.add(withdrawal)
+                db.session.commit()
+                flash("Withdrawal successful")
+            else:
+                flash("Insufficient balance or invalid amount")
+        except ValueError:
+            flash("Enter a valid amount")
+            
     return render_template("withdraw.html", user=user)
 
 @app.route("/leaderboard")
@@ -155,12 +167,13 @@ def adverts():
     all_shops = Shop.query.order_by(Shop.created_at.desc()).all()
     return render_template("adverts.html", shops=all_shops)
 
-# ------------------ Helper ------------------ #
+# ---------------------- Helper ---------------------- #
 def get_current_user():
     user_id = session.get("user_id")
     if user_id:
         return User.query.get(user_id)
     return None
 
+# ---------------------- Run ---------------------- #
 if __name__ == "__main__":
     app.run(debug=True)
