@@ -1,94 +1,172 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html lang="en">
 <head>
-    <title>Welcome to Market Locator</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f6f9;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Locator - Home</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+    }header {
+  background-color: #2c3e50;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-        .header {
-            background-color: #007bff;
-            padding: 20px;
-            color: white;
-            text-align: center;
-            border-bottom: 4px solid #0056b3;
-        }
+.nav-links {
+  display: flex;
+  gap: 15px;
+}
 
-        .container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
 
-        h2 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+.nav-links a:hover {
+  color: #18bc9c;
+}
 
-        .btn-grid {
-            display: grid;
-            gap: 15px;
-            grid-template-columns: 1fr;
-        }
+.hero {
+  background: url('https://source.unsplash.com/1600x900/?market') no-repeat center center/cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
 
-        @media (min-width: 500px) {
-            .btn-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
 
-        .btn {
-            padding: 15px;
-            background-color: #007bff;
-            color: white;
-            text-align: center;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
+.search-container {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
 
-        .btn:hover {
-            background-color: #0056b3;
-        }
+.search-container input {
+  width: 300px;
+  padding: 12px;
+  font-size: 18px;
+  border: none;
+  border-radius: 6px 0 0 6px;
+  outline: none;
+}
 
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 14px;
-            color: #666;
-        }
-    </style>
+.search-container button {
+  padding: 12px 18px;
+  font-size: 18px;
+  border: none;
+  border-radius: 0 6px 6px 0;
+  background-color: #18bc9c;
+  color: white;
+  cursor: pointer;
+}
+
+.search-container button:hover {
+  background-color: #148f77;
+}
+
+.ads-section, .recent-searches, .trending {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.ads-carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 20px;
+}
+
+.ads-carousel img {
+  max-height: 150px;
+  border-radius: 8px;
+}
+
+.card {
+  background: #f8f9fa;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+footer {
+  background-color: #2c3e50;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+@media(max-width: 600px) {
+  .search-container input {
+    width: 100%;
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+
+  .search-container button {
+    width: 100%;
+    border-radius: 6px;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+  </style>
 </head>
 <body>
-
-    <div class="header">
-        <h1>Market Locator</h1>
-        <p>Welcome to the platform</p>
+  <header>
+    <div><strong>Market Locator</strong></div>
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/search">Search</a>
+      <a href="/register_shop">Register Shop</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/logout">Logout</a>
+    </nav>
+  </header>  <section class="hero">
+    <div class="search-container">
+      <form action="/search" method="GET">
+        <input type="text" name="q" placeholder="Search for shops or items..." required>
+        <button type="submit">Search</button>
+      </form>
     </div>
-
-    <div class="container">
-        <h2>Main Menu</h2>
-        <div class="btn-grid">
-            <a href="/refer" class="btn">Referral Dashboard</a>
-            <a href="/wallet" class="btn">Wallet Balance</a>
-            <a href="/withdraw" class="btn">Request Withdrawal</a>
-            <a href="/search" class="btn">Search Shops</a>
-            <a href="/register-shop" class="btn">Register Your Shop</a>
-            <a href="/logout" class="btn" style="background-color:#dc3545;">Logout</a>
-        </div>
+  </section>  <section class="ads-section">
+    <h2>Sponsored Shops</h2>
+    <div class="ads-carousel">
+      <img src="/static/ad1.jpg" alt="Ad 1">
+      <img src="/static/ad2.jpg" alt="Ad 2">
+      <img src="/static/ad3.jpg" alt="Ad 3">
     </div>
-
-    <div class="footer">
-        &copy; 2025 Market Locator. Built with ❤️ in Nigeria.
-    </div>
-
-</body>
+  </section>  <section class="recent-searches">
+    <h2>Recent Searches</h2>
+    <div class="card">Tomatoes in Sabon Gari</div>
+    <div class="card">Fabrics in Samaru</div>
+    <div class="card">Cooking Oil in Zaria City</div>
+  </section>  <section class="trending">
+    <h2>Trending Products</h2>
+    <div class="card">📈 Rice - ₦42,000</div>
+    <div class="card">🔥 Palm Oil - ₦2,500</div>
+    <div class="card">✨ Indomie - ₦350</div>
+  </section>  <footer>
+    &copy; 2025 Market Locator | Built for Startup Abuja
+  </footer></body>
 </html>

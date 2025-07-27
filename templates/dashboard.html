@@ -1,111 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>User Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard - Shop Locator</title>
   <style>
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f0f2f5;
+      background-color: #f4f6f8;
+    }
+
+    header {
+      background-color: #2c3e50;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    nav a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
     }
 
     .container {
-      max-width: 900px;
-      margin: 40px auto;
-      background: #ffffff;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     }
 
     h2 {
       text-align: center;
-      color: #2c3e50;
+      color: #34495e;
+    }
+
+    .flash-message {
+      background: #dff9fb;
+      color: #34495e;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-left: 5px solid #3498db;
+      border-radius: 6px;
     }
 
     .section {
-      margin: 20px 0;
+      background: #f1f3f6;
       padding: 15px;
-      background-color: #ecf0f1;
+      margin: 20px 0;
       border-radius: 8px;
     }
 
     .section strong {
-      display: block;
-      margin-bottom: 5px;
-      color: #34495e;
-    }
-
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      margin-top: 30px;
-    }
-
-    .nav a {
-      display: inline-block;
-      text-align: center;
-      background-color: #3498db;
-      color: white;
-      padding: 12px 18px;
-      margin: 10px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: bold;
-      width: 130px;
-      transition: background 0.3s;
-    }
-
-    .nav a:hover {
-      background-color: #2980b9;
-    }
-
-    .logout {
-      text-align: right;
-      margin-top: -20px;
-    }
-
-    .logout a {
-      color: #e74c3c;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    .logout a:hover {
-      text-decoration: underline;
-    }
-
-    .flash-message {
-      padding: 12px;
-      margin-bottom: 20px;
-      background-color: #dff9fb;
-      border-left: 5px solid #3498db;
-      border-radius: 5px;
       color: #2c3e50;
     }
 
-    @media (max-width: 600px) {
-      .nav a {
-        width: 100%;
-        margin: 8px 0;
-      }
+    .section input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-top: 8px;
+    }
 
-      .logout {
-        text-align: center;
-        margin-top: 10px;
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: space-between;
+    }
+
+    .card {
+      background: #3498db;
+      color: white;
+      flex: 1 1 30%;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .card h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .nav-buttons {
+      margin-top: 25px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .nav-buttons a {
+      background: #2ecc71;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .nav-buttons a:hover {
+      background: #27ae60;
+    }
+
+    @media (max-width: 600px) {
+      .stats {
+        flex-direction: column;
+      }
+      nav {
+        flex-direction: column;
+      }
+      nav a {
+        margin: 8px 0;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="logout">
-      <a href="/logout">Logout</a>
-    </div>
 
+  <header>
+    <div class="logo">Shop Locator</div>
+    <nav>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/wallet">Wallet</a>
+      <a href="/refer">Refer</a>
+      <a href="/withdraw">Withdraw</a>
+      <a href="/search">Search</a>
+      <a href="/leaderboard">Leaderboard</a>
+      <a href="/register_shop">Add Shop</a>
+      <a href="/logout" style="color:#e74c3c;">Logout</a>
+    </nav>
+  </header>
+
+  <div class="container">
     <h2>👋 Welcome, {{ user.username or "User" }}</h2>
 
     {% with messages = get_flashed_messages() %}
@@ -118,22 +163,27 @@
       {% endif %}
     {% endwith %}
 
-    <div class="section">
-      <strong>💰 Wallet Balance:</strong>
-      ₦{{ '%.2f'|format(user.wallet_balance) }}
+    <div class="stats">
+      <div class="card">
+        <h3>💰 Wallet Balance</h3>
+        <p>₦{{ '%.2f'|format(user.wallet_balance) }}</p>
+      </div>
+      <div class="card">
+        <h3>👥 Referrals</h3>
+        <p>{{ user.referrals.count() }}</p>
+      </div>
+      <div class="card">
+        <h3>🛒 Registered Shops</h3>
+        <p>{{ user.shops.count() if user.shops else 0 }}</p>
+      </div>
     </div>
 
     <div class="section">
       <strong>🔗 Your Referral Link:</strong>
-      <input type="text" value="{{ url_for('register', ref=user.referral_code, _external=True) }}" readonly style="width:100%;padding:8px;border:1px solid #ccc;border-radius:5px;">
+      <input type="text" readonly value="{{ url_for('register', ref=user.referral_code, _external=True) }}" />
     </div>
 
-    <div class="section">
-      <strong>👥 Total Referrals:</strong>
-      {{ user.referrals|length }}
-    </div>
-
-    <div class="nav">
+    <div class="nav-buttons">
       <a href="/wallet">Wallet</a>
       <a href="/refer">Refer</a>
       <a href="/withdraw">Withdraw</a>
@@ -142,5 +192,10 @@
       <a href="/register_shop">Register Shop</a>
     </div>
   </div>
+
+  <script>
+    // Future JS actions (dropdowns, modals, etc.)
+    console.log("Dashboard loaded successfully.");
+  </script>
 </body>
 </html>
